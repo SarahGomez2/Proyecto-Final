@@ -1,4 +1,71 @@
 #intento 1 para compilar codigo completo 
+class cuenta():
+    # ....
+    def retirar(self, cantidad):
+        """
+        Método que permite retirar dinero de las cuentas de débito y nómina.
+        :param float cantidad: el monto a retirar
+        """
+        if cantidad > 0:
+            if saldo >= cantidad:
+                self.saldo -= cantidad
+                print("Se retirarón {} pesos de manera exitosa".format(cantidad))
+                return self.saldo
+            else:
+                print("No hay fondos suficientes para retirar")
+        else:
+            print("Retira una cantidad positiva")
+
+class debito(cuenta):
+    # ....
+    def depositar(self, cantidad):
+        """
+        Método para depositar dinero a la cuenta de débito.
+        :param float cantidad: el monto a depositar
+        """
+        if cantidad > 0:
+            self.saldo += cantidad
+            print("Se depositó {} pesos de manera exitosa".format(cantidad))
+            return self.saldo
+        else:
+            print("El monto a depositar debe ser positiva")
+
+class nomina(cuenta):
+    # ....
+    def depositar(self, cantidad, rfc_empresa):
+        """
+        Método para depositar dinero a la cuenta de nómina.
+        :param float cantidad: el monto a depositar
+        """
+        if cantidad > 0:
+            if self.rfc_empresa == rfc_empresa:
+                self.saldo += cantidad
+                print("Se depositó {} pesos de manera exitosa a la cuenta de nómina".format(cantidad))
+                return self.saldo
+            else:
+                print("Solo se pueden hacer depósitos por parte de la empresa asociada")
+        else:
+            print("El monto a depositar debe ser positiva")
+
+class credito(cuenta):
+    # ....
+    def retirar(self, cantidad):
+        """
+        Método que permite retirar dinero de la cuenta de crédito.
+        :param float cantidad: el monto a retirar
+        """
+        credito_disponible = self.importe_credito - self.monto_credito_utilizado
+        if cantidad > 0:
+            interes = cantidad * 1.05
+            if credito_disponible >= interes:
+                self.monto_credito_utilizado += interes
+                print("Se retirarón {} pesos de manera exitosa".format(cantidad))
+                return self.monto_credito_utilizado
+            else:
+                print("No hay crédito suficiente para retirar")
+        else:
+            print("Retira una cantidad positiva")
+
 import Cuenta as c
 
 class Debito(c.Cuenta):
