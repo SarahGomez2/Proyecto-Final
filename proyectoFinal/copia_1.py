@@ -239,6 +239,233 @@ from datetime import date
 from datetime import datetime
 from email_validator import validate_email, EmailNotValidError
 
+import Persona as p
+from datetime import datetime
+import csv  # Lectura/escritura de archivos
+from locale import currency
+from locale import setlocale
+from locale import LC_MONETARY
+
+
+def __nombremes(mes:int):
+    """
+    Función privada que devuelve el nombre del mes.
+    :param mes: El número de mes válido.
+    :return: El nombre del mes.
+    :rtype: str
+    """
+    match mes:
+        case 1: nombre = "Enero"
+        case 2: nombre = "Febrero"
+        case 3: nombre = "Marzo"
+        case 4: nombre = "Abril"
+        case 5: nombre = "Mayo"
+        case 6: nombre = "Junio"
+        case 7: nombre = "Julio"
+        case 8: nombre = "Agosto"
+        case 9: nombre = "Septiembre"
+        case 10: nombre = "Octubre"
+        case 11: nombre = "Noviembre"
+        case 12: nombre = "Diciembre"
+    return nombre
+
+# Crear una lista vacía
+lista_personas = []
+while True:
+    print("1. Agregar una persona")
+    print("2. Mostrar una persona por nombre y apellido")
+    print("3. Eliminar una persona por nombre y apellido")
+    print("4. Mostrar todas las personas")
+    print("5. Mostrar todas las personas dada una edad")
+    print("6. Eliminar todas las personas dada una edad")
+    print("7. Leer Personas desde archivo")
+    print("8. Guardar Personas en archivo")
+    print("9. Mostrar persona por rango de salario")
+    print("10. Mostrar persona por mes y año")
+    print("[S]alir")
+    accion = input("¿Qué deseas hacer? ").upper()
+    if accion not in "1,2,3,4,5,6,7,8,9,10,S" or len(accion) > 2:
+        print("No sé qué deseas hacer!\n")
+        continue
+    else:
+        match accion:
+            case "1":  # Agregar persona
+                try:
+                    nombre = input("Escribe el nombre de la persona: ")
+                    apellidos = input("Escribe los apellidos de la persona: ")
+                    nacimiento = input("Escribe la fecha de nacimiento (dd-mm-yyyy): ")
+                    salario = input("Escribe el salario de la persona: ")
+                    mail = input("Escribe el correo de la persona: ")
+                    # Agregamos la persona a nuestra lista
+                    lista_personas.append(p.Persona(nombre,
+                                                    apellidos,
+                                                    datetime.strptime(nacimiento, "%d-%m-%Y").date(),
+                                                    float(salario),
+                                                    mail))
+                    print("Se agregó la persona indicada\n")
+                except ValueError:
+                    print("La fecha no corresponde con el formato dd-mm-yyyy\n")
+            case "2":  # Mostrar una persona por nombre y apellido
+                if not lista_personas:  # Comprueba si la lista está vacía
+                    print("La lista de Personas está vacía!\n")
+                else:  # La lista no está vacía
+                    encontro = False  # Indica que aún no la hemos encontrado
+                    nombre = input("Escribe el nombre de la persona: ")
+                    apellidos = input("Escribe los apellidos de la persona: ")
+                    # Comenzamos la búsqueda de personas por nombre y apellidos
+                    for persona in lista_personas:  # Cada persona en la lista se asocia con per
+                        if (persona.nombre == nombre and
+                                persona.apellidos == apellidos):
+                            print(persona)  # Encontramos a la persona y la imprimimos
+                            encontro = True  # Indica que ya no necesito seguir buscando
+                            print()
+                            break  # Rompemos el ciclo for, para ya no buscar
+                    if not encontro:  # Si se recorrió la lista y no encontró nada
+                        print("La persona {} {} no fue encontrada".format(nombre, apellidos))
+            case "3":  # Eliminar persona por nombre y apellido
+                if not lista_personas:  # Comprueba si la lista está vacía
+                    print("La lista de Personas está vacía!\n")
+                else:  # La lista no está vacía
+                    encontro = False  # Indica que aún no la hemos encontrado
+                    nombre = input("Escribe el nombre de la persona: ")
+                    apellidos = input("Escribe los apellidos de la persona: ")
+                    # Comenzamos la búsqueda de personas por nombre y apellidos
+                    for persona in lista_personas:  # Cada persona en la lista se asocia con per
+                        if (persona.nombre == nombre and
+                                persona.apellidos == apellidos):
+                            lista_personas.remove(persona)  # Encontramos a la persona y la borramos
+                            encontro = True  # Indica que ya no necesito seguir buscando
+                            break  # Rompemos el ciclo for, para ya no buscar
+                    if not encontro:  # Si se recorrió la lista y no encontró nada
+                        print("La persona {} {} no fue eliminada".format(nombre, apellidos))
+            case "4":  # Imprimir todas las personas
+                if not lista_personas:  # Comprueba si la lista está vacía
+                    print("La lista de Personas está vacía!\n")
+                else:  # La lista no está vacía
+                    for persona in lista_personas:
+                        print(persona)  # Imprime las personas una a una
+                    print()
+            case "5":  # Mostrar todas las personas dada una edad
+                if not lista_personas:  # Comprueba si la lista está vacía
+                    print("La lista de Personas está vacía!\n")
+                else:  # La lista no está vacía
+                    encontro = False  # Aún no se ha encontrado la persona
+                    edad = int(input("Escribe la edad de la persona a buscar: "))
+                    # Comenzamos la búsqueda en la lista
+                    for persona in lista_personas:  # Recorremos la lista
+                        if persona.edad() == edad:
+                            encontro = True  # Si encotramos al menos una, la mostramos
+                            print(persona)
+                    print()
+                            # break  # Este break serviría, si solo quisiera una persona
+                    if not encontro:  # La persona con la edad indicada, no estaba
+                        print("No existen personas de {} años\n".format(edad))
+            case "6":  # Eliminar todas las personas dada una edad
+                if not lista_personas:  # Comprueba si la lista está vacía
+                    print("La lista de Personas está vacía!\n")
+                else:  # La lista no está vacía
+                    encontro = False  # Aún no se ha encontrado la persona
+                    edad = int(input("Escribe la edad de la persona a buscar: "))
+                    # Comenzamos la búsqueda en la lista
+                    for persona in lista_personas:  # Recorremos la lista
+                        if persona.edad() == edad:
+                            encontro = True  # Si encotramos al menos una, la mostramos
+                            lista_personas.remove(persona)
+                            # break  # Este break serviría, si solo quisiera una persona
+                    if not encontro:  # La persona con la edad indicada, no estaba
+                        print("No existen personas de {} años".format(edad))
+
+            case "S":  # Salir
+                print("Hasta luego!")
+                break
+
+            case "7":  # Leer archivo
+                archivo = input("Escribe el  nombre del archivo CSV: ")
+                existe = False  # Indica si el archivo se encontró o no
+                while not existe:  # Mientras el archivo exista
+                    # Abrir el archivo CSV
+                    try:
+                        with open(archivo, encoding="UTF8", newline="") as file:
+                            lector = csv.reader(file)
+                            # Dado que hay header, vamos a saltar esa línea
+                            lector.__next__()
+                            if lista_personas:
+                                print("La lista de personas no está vacía")
+                                resp = input("¿Deseas agregar otras personas?(y/n): ")
+                                if resp.lower()[0] == "n":
+                                    lista_personas = []  # Vaciamos la lista
+                            for fila in lector:
+                                lista_personas.append(p.Persona(fila[0],  # Nombre
+                                                                fila[1],  # Apellidos
+                                                                datetime.strptime(fila[2], "%Y-%m-%d").date(),  # Nacimiento
+                                                                float(fila[3]),  # Salario
+                                                                fila[4]))  # Correo
+                            existe = True  # Si llegó aquí, el archivo existe
+                            print("El archivo de Personas se leyó correctamente\n")
+                    except FileNotFoundError:
+                        print("El archivo no existe!\n")
+                        archivo = input("Escribe el nombre del archivo CSV: ")
+
+            case "8":  # Guardar archivo de Personas
+                archivo = input("Escribe el nombre del archivo a guardar: ")
+                with open(archivo, "w", encoding="UTF8", newline="") as file:
+                    # Utilizando CSV
+                    header = ["nombre", "apellidos", "nacimiento", "salario", "mail"]
+                    writer = csv.writer(file)
+                    # Escribir el encabezado del archivo
+                    writer.writerow(header)
+                    # Escribir múltiples líneas
+                    writer.writerows(lista_personas)
+                    print("El archivo {} se guardó con éxito!\n".format(archivo))
+
+            case "9":  # Mostrar todas las personas que tienen un salario en un rango
+                setlocale(LC_MONETARY, "en_US")
+                if not lista_personas:  # Comprueba si la lista está vacía
+                    print("La lista de Personas está vacía!\n")
+                else:  # La lista no está vacía
+                    encontro = False  # Aún no se ha encontrado la persona
+                    salario1 = float(input("Escribe el salario inicial: "))
+                    salario2 = float(input("Escribe el salario final: "))
+                    while salario2 < salario1:
+                        print("El segundo final debe ser mayor al inicial!")
+                        salario2 = float(input("Escribe el salario final: "))
+                    # Comenzamos la búsqueda en la lista
+                    for persona in lista_personas:  # Recorremos la lista
+                        if salario1 <= persona.salario <= salario2:
+                            encontro = True  # Si encotramos al menos una, la mostramos
+                            print(persona)
+                    print()
+                    # break  # Este break serviría, si solo quisiera una persona
+                    if not encontro:  # La persona con la edad indicada, no estaba
+                        print("No existen personas con salario entre "
+                              "{} y {}\n".format(currency(salario1, grouping=True),
+                                                 currency(salario2, grouping=True)))
+
+            case "10":  # Mostrar todas las personas que nacieron en un mes y año particular
+                if not lista_personas:  # Comprueba si la lista está vacía
+                    print("La lista de Personas está vacía!\n")
+                else:  # La lista no está vacía
+                    encontro = False  # Aún no se ha encontrado la persona
+                    mes = input("Escribe el mes a buscar: ")
+                    while mes not in "1,2,3,4,5,6,7,8,9,10,11,12":
+                        print("El mes debe ser un valor entre 1 y 12!")
+                        mes = input("Escribe el mes a buscar: ")
+                    año = int(input("Escribe el año a buscar: "))
+                    while 0 > año > 9999:
+                        print("El año debe estar entre 1 y 9999")
+                        año = int(input("Escribe el año a buscar: "))
+                    # Comenzamos la búsqueda en la lista
+                    for persona in lista_personas:  # Recorremos la lista
+                        if persona.nacimiento.year == año and \
+                                persona.nacimiento.month == int(mes):
+                            encontro = True  # Si encotramos al menos una, la mostramos
+                            print(persona)
+                    print()
+                    # break  # Este break serviría, si solo quisiera una persona
+                    if not encontro:  # La persona con la edad indicada, no estaba
+                        print("No existen personas que hayan nacido en "
+                              "{} del año {}\n".format(__nombremes(int(mes)), año))
+
 class Cuenta:
     def __init__(self, nombre_cliente, numero_cliente, numero_producto, monto, fecha_apertura,
                  fecha_accion, sucursal, estado, correo, telefono):
@@ -498,6 +725,458 @@ if __name__ == "__main__":
                     100000, "15-04-23", "25-05-23", 4, "Ciudad de México",
                     "luisfrancis@gmail.com", "5534689876")
     print(cuenta)
+
+while True:
+   print("1. Crear nueva cuenta")
+   print("2. Actualizar datos de la cuenta")
+   print("3. Registrar una nueva apertura de cuenta")
+   print("4. Dar de alta nuevo empleado")
+   print("5. Actualizar datos de un empleado")
+   print("[R] Regresar al menu anterior")
+    accion = input("¿Qué deseas hacer? ").upper()
+     if accion not in "1,2,3,4,5,R" or len(accion) > 2:
+      print("No sé qué deseas hacer!\n")
+      continue
+  else:
+      match accion:
+    case "1":  # Crear cuenta
+     while True:
+       print("1. Cuenta de credito")
+       print("2. Cuenta de debito")
+       print("3. Cuenta de nomina")
+        print("[R] Regresar al menu anterior")
+       accion = input("¿Qué deseas hacer? ").upper()
+       if accion not in "1,2,3,R" or len(accion) > 2:
+           print("No sé qué deseas hacer!\n")
+           continue
+       else:
+           match accion:
+               case "1": #Crear cuenta de credito
+                try:
+                  cuenta = #Se genera automaticamente
+                  sucursal = while True:
+                       print("1. Sucursal CDMX")
+                       print("2. Sucursal Cancún")
+                       print("3. Sucursal Monterrey")
+                       print("4. Sucursal Guadalajara")
+                       print("5. Sucursal Oaxaca")
+                       print("6. Sucursal Puebla")
+                       accion = input("¿Qué sucursal? ").upper()
+                       if accion not in "1,2,3,4,5,6" or len(accion) > 2:
+                           print("No existe esa opcion\n")
+                                  continue
+                       else:
+                            match accion:
+                                case "1": 
+                                    sucursal = cdmx
+                                case "2":
+                                    sucursal = cancun
+                                case "3":
+                                    sucursal = monterrey
+                                case "4":
+                                    sucursal = guadalajara
+                                case "5":
+                                    sucursal = oaxaca
+                                case "6":
+                                    sucursal = puebla
+                  nombre = input("Escriba el nombre del cliente: ")
+                  apellidos = input("Escriba los apellidos del cliente: ")
+                  apertura = input("Escribe la fecha de apertura (dd-mm-yyyy): ")
+                  mail = input("Escribe el correo del cliente: ")
+                  telefono = input("Escribe el telefono del cliente: ")
+                  estado = if sucursal = cdmx: 
+                            print "Ciudad de Mexico"
+                           elif sucursal = cancun:
+                            print "Quintana Roo"
+                           elif sucursal = monterrey:
+                            print "Nuevo Leon"
+                           elif sucursal = guadalajara:
+                            print "Jalisco"
+                           elif sucursal = oaxaca:
+                            print "Oaxaca"
+                           elif sucursal = puebla:
+                            print "Puebla"
+                           else:
+                            print "No existe esa opcion\n"
+                  vencimiento = input("Escribe la fecha de vencimiento (dd-mm-yyyy): ")
+                  credito = input("Escriba el importe de credito: ")
+                  utilizado = input("Escriba el monto de credito utilizado: ")
+                  pago = input("Escribe la fecha de pago (dd-mm-yyyy): ")
+                  # Agregamos al cliente a nuestra lista
+                  lista_credito.append(c.Cliente(nombre,
+                                                  apellidos,
+                                                  datetime.strptime(apertura, "%d-%m-%Y").date(),
+                                                  float(salario),
+                                                  mail, telefono, estado, float(credito), float(utilizado), cuenta, sucursal, datetime.strptime(vencimiento,                                                   "%d-%m-%Y").date(), datetime.strptime(pago, "%d-%m-%Y").date(),)
+                  print("Se agregó el cliente\n")
+                except ValueError:
+                  print("La fecha no corresponde con el formato dd-mm-yyyy\n")
+                
+              case "2":  # Crear cuenta de debito
+              try:
+                cuenta = #Se genera automaticamente
+                sucursal = while True:
+                    print("1. Sucursal CDMX")
+                    print("2. Sucursal Cancún")
+                    print("3. Sucursal Monterrey")
+                    print("4. Sucursal Guadalajara")
+                    print("5. Sucursal Oaxaca")
+                    print("6. Sucursal Puebla")
+                    accion = input("¿Qué sucursal? ").upper()
+                        if accion not in "1,2,3,4,5,6" or len(accion) > 2:
+                           print("No existe esa opcion\n")
+                                continue
+                        else:
+                            match accion:
+                              case "1": 
+                                sucursal = cdmx
+                              case "2":
+                                sucursal = cancun
+                              case "3":
+                                sucursal = monterrey
+                              case "4":
+                                sucursal = guadalajara
+                              case "5":
+                                sucursal = oaxaca
+                              case "6":
+                                sucursal = puebla
+                nombre = input("Escriba el nombre del cliente: ")
+                apellidos = input("Escriba los apellidos del cliente: ")
+                apertura = input("Escribe la fecha de apertura (dd-mm-yyyy): ")
+                mail = input("Escribe el correo del cliente: ")
+                telefono = input("Escribe el telefono del cliente: ")
+                estado = if sucursal = cdmx: 
+                         print "Ciudad de Mexico"
+                        elif sucursal = cancun:
+                         print "Quintana Roo"
+                        elif sucursal = monterrey:
+                         print "Nuevo Leon"
+                        elif sucursal = guadalajara:
+                         print "Jalisco"
+                        elif sucursal = oaxaca:
+                         print "Oaxaca"
+                        elif sucursal = puebla:
+                         print "Puebla"
+                        else:
+                         print "No existe esa opcion\n"
+                corte = input("Escribe la fecha de corte (dd-mm-yyyy): ")
+                saldo = input("Escriba el saldo inicial: ")
+                # Agregamos al cliente a nuestra lista
+                lista_debito.append(c.Cliente(nombre, apellidos, datetime.strptime(apertura, "%d-%m-%Y").date(),
+                                      float(salario), mail, telefono, estado, float(saldo), cuenta, sucursal, 
+                                      datetime.strptime(corte, "%d-%m-%Y").date(),)
+                    print("Se agregó el cliente\n")
+                    except ValueError:
+                        print("La fecha no corresponde con el formato dd-mm-yyyy\n")
+    
+              case "3":  # Crear cuenta de nomina
+              try:
+                cuenta = #Se genera automaticamente
+                sucursal = while True:
+                    print("1. Sucursal CDMX")
+                    print("2. Sucursal Cancún")
+                    print("3. Sucursal Monterrey")
+                    print("4. Sucursal Guadalajara")
+                    print("5. Sucursal Oaxaca")
+                    print("6. Sucursal Puebla")
+                   accion = input("¿Qué sucursal? ").upper()
+                      if accion not in "1,2,3,4,5,6" or len(accion) > 2:
+                        print("No existe esa opcion\n")
+                          continue
+                      else:
+                         match accion:
+                           case "1": 
+                             sucursal = cdmx
+                           case "2":
+                             sucursal = cancun
+                           case "3":
+                             sucursal = monterrey
+                           case "4":
+                             sucursal = guadalajara
+                           case "5":
+                             sucursal = oaxaca
+                           case "6":
+                             sucursal = puebla
+                nombre = input("Escriba el nombre del cliente: ")
+                apellidos = input("Escriba los apellidos del cliente: ")
+                apertura = input("Escribe la fecha de apertura (dd-mm-yyyy): ")
+                mail = input("Escribe el correo del cliente: ")
+                telefono = input("Escribe el telefono del cliente: ")
+                estado = if sucursal = cdmx: 
+                         print "Ciudad de Mexico"
+                        elif sucursal = cancun:
+                         print "Quintana Roo"
+                        elif sucursal = monterrey:
+                         print "Nuevo Leon"
+                        elif sucursal = guadalajara:
+                         print "Jalisco"
+                        elif sucursal = oaxaca:
+                         print "Oaxaca"
+                        elif sucursal = puebla:
+                         print "Puebla"
+                        else:
+                         print "No existe esa opcion\n"
+                corte = input("Escribe la fecha de corte (dd-mm-yyyy): ")
+                saldo = input("Escriba el saldo inicial: ")
+                # Agregamos la persona a nuestra lista
+                lista_nomina.append(c.Cliente(nombre, apellidos, datetime.strptime(apertura, "%d-%m-%Y").date(),
+                                                float(salario), mail, telefono, estado, float(saldo), cuenta, sucursal, 
+                                                datetime.strptime(corte,"%d-%m-%Y").date(),)
+                  print("Se agregó el cliente\n")
+                  except ValueError:
+                  print("La fecha no corresponde con el formato dd-mm-yyyy\n")
+                
+    
+    case "2":  # Actualizar los datos de una cuenta 
+    while True:
+      print("1. Cuenta de credito")
+      print("2. Cuenta de debito")
+      print("3. Cuenta de nomina")
+           print("[R] Regresar al menu anterior")
+           accion = input("¿Qué deseas hacer? ").upper()
+           if accion not in "1,2,3,R" or len(accion) > 2:
+               print("No sé qué deseas hacer!\n")
+               continue
+           else:
+               match accion:
+                   case "1": #Buscar en cuentas de credito
+                    try:
+                      print ("Ingrese el nombre y el numero de cuenta: ") #Creo que aqui va algo de True, en vez de ese print
+                      if not lista_credito:  # Comprueba si la lista está vacía
+                        print("La lista de Clientes está vacía!\n")
+                      else:  # La lista no está vacía
+                        encontro = False  # Indica que aún no la hemos encontrado
+                        nombre = input("Escribe el nombre del cliente: ")
+                        cuenta = input("Escribe el numero de cuenta: ")
+                        # Comenzamos la búsqueda de clintes por nombre y numero de cuenta
+                        for cliente in lista_credito:  
+                         if (cliente.nombre == nombre and
+                             cliente.cuenta == cuenta):
+                          print(cliente)  # Encontramos al cliente y lo imprimimos
+                        encontro = True  # Indica que ya no necesito seguir buscando
+                        print()
+                         break  # Rompemos el ciclo for, para ya no buscar
+                         if not encontro:  # Si se recorrió la lista y no encontró nada
+                         print("El cliente {} con numero de cuenta {} no fue encontrado".format(nombre, cuenta))
+                      print ("Los datos actuales de la cuenta son: (nombre,
+                                                  apellidos,
+                                                  datetime.strptime(apertura, "%d-%m-%Y").date(),
+                                                  float(salario),
+                                                  mail, telefono, estado, float(credito), float(utilizado), cuenta, sucursal, datetime.strptime(vencimiento,                                                   "%d-%m-%Y").date(), datetime.strptime(pago, "%d-%m-%Y").date(),)")
+                      print ("Es el cliente que buscabas?")
+                          if true:
+                            print ("Estos son los datos que puedes actualizar, modifica solo los necesarios")
+                            nombre = input("Escriba el nombre del cliente: ")
+                            apellidos = input("Escriba los apellidos del cliente: ")
+                            apertura = input("Escribe la fecha de apertura (dd-mm-yyyy): ")
+                            mail = input("Escribe el correo del cliente: ")
+                            telefono = input("Escribe el telefono del cliente: ")
+                            estado = if sucursal = cdmx: 
+                                      print "Ciudad de Mexico"
+                                     elif sucursal = cancun:
+                                      print "Quintana Roo"
+                                     elif sucursal = monterrey:
+                                      print "Nuevo Leon"
+                                     elif sucursal = guadalajara:
+                                      print "Jalisco"
+                                     elif sucursal = oaxaca:
+                                      print "Oaxaca"
+                                     elif sucursal = puebla:
+                                      print "Puebla"
+                                     else:
+                                       print "No existe esa opcion\n"
+                            vencimiento = input("Escribe la fecha de vencimiento (dd-mm-yyyy): ")
+                            credito = input("Escriba el importe de credito: ")
+                            utilizado = input("Escriba el monto de credito utilizado: ")
+                            pago = input("Escribe la fecha de pago (dd-mm-yyyy): ")
+                            # Actualizamos los datos del cliente en nuestra lista
+                              lista_credito.append(c.Cliente(nombre, apellidos, datetime.strptime(apertura, "%d-%m-%Y").date(),
+                                                            float(salario), mail, telefono, estado, float(credito), float(utilizado), 
+                                                            cuenta,sucursal, datetime.strptime(vencimiento,"%d-%m-%Y").date(), 
+                                                             datetime.strptime(pago, "%d-%m-%Y").date(),)
+                              print("Se actualizaron los datos!\n")
+                            except ValueError:
+                              print("La fecha no corresponde con el formato dd-mm-yyyy\n")
+                          else:
+                            print ("Intentelo de nuevo")
+                              #Que lo regrese al menu anterior
+    
+                    case "2": #Buscar en cuentas de debito
+                    try:
+                       print ("Ingrese el nombre y el numero de cuenta: ") #Creo que aqui va algo de True, en vez de ese print
+                       if not lista_debito:  # Comprueba si la lista está vacía
+                         print("La lista de Clientes está vacía!\n")
+                       else:  # La lista no está vacía
+                         encontro = False  # Indica que aún no la hemos encontrado
+                         nombre = input("Escribe el nombre del cliente: ")
+                         cuenta = input("Escribe el numero de cuenta: ")
+                        # Comenzamos la búsqueda de clientes por nombre y numero de cuenta
+                        for cliente in lista_debito:  
+                        if (cliente.nombre == nombre and
+                            cliente.cuenta == cuenta):
+                         print(cliente)  # Encontramos al cliente y lo imprimimos
+                         encontro = True  # Indica que ya no necesito seguir buscando
+                         print()
+                        break  # Rompemos el ciclo for, para ya no buscar
+                           if not encontro:  # Si se recorrió la lista y no encontró nada
+                          print("El cliente {} con numero de cuenta {} no fue encontrado".format(nombre, cuenta))
+                      print ("Los datos actuales de la cuenta son: (nombre, apellidos, datetime.strptime(apertura, "%d-%m-%Y").date(),
+                                   float(salario), mail, telefono, estado, float(saldo), cuenta, sucursal, 
+                                   datetime.strptime(corte, "%d-%m-%Y").date(),))
+                    print ("Es el cliente que buscabas?")
+                        if true:
+                          print ("Estos son los datos que puedes actualizar, modifica solo los necesarios")
+                            nombre = input("Escriba el nombre del cliente: ")
+                            apellidos = input("Escriba los apellidos del cliente: ")
+                            apertura = input("Escribe la fecha de apertura (dd-mm-yyyy): ")
+                            mail = input("Escribe el correo del cliente: ")
+                            telefono = input("Escribe el telefono del cliente: ")
+                            estado = if sucursal = cdmx: 
+                                      print "Ciudad de Mexico"
+                                     elif sucursal = cancun:
+                                      print "Quintana Roo"
+                                     elif sucursal = monterrey:
+                                      print "Nuevo Leon"
+                                     elif sucursal = guadalajara:
+                                      print "Jalisco"
+                                     elif sucursal = oaxaca:
+                                      print "Oaxaca"
+                                     elif sucursal = puebla:
+                                      print "Puebla"
+                                     else:
+                                      print "No existe esa opcion\n"
+                            corte = input("Escribe la fecha de corte (dd-mm-yyyy): ")
+                            saldo = input("Escriba el saldo inicial: ")
+                                  # Agregamos al cliente a nuestra lista
+                            lista_debito.append(c.Cliente(nombre, apellidos, datetime.strptime(apertura, "%d-%m-%Y").date(),
+                                                          mail, telefono, estado, float(saldo), cuenta, sucursal, 
+                                                          datetime.strptime(corte, "%d-%m-%Y").date(),)
+                            print("Se actualizaron los datos!\n")
+                            except ValueError:
+                             print("La fecha no corresponde con el formato dd-mm-yyyy\n")
+                        else:
+                          print ("Intentelo de nuevo")
+                          #Que lo regrese al menu anterior
+                                                
+                    case "3": #Buscar en cuentas de nomina
+                    try:
+                        print ("Ingrese el nombre y el numero de cuenta: ") #Creo que aqui va algo de True, en vez de ese print
+                        if not lista_nomina:  # Comprueba si la lista está vacía
+                         print("La lista de Personas está vacía!\n")
+                        else:  # La lista no está vacía
+                        encontro = False  # Indica que aún no la hemos encontrado
+                        nombre = input("Escribe el nombre del cliente: ")
+                        cuenta = input("Escribe el numero de cuenta: ")
+                         # Comenzamos la búsqueda de clientes por nombre y numero de cuenta
+                        for cliente in lista_nomina:  
+                         if (cliente.nombre == nombre and
+                             cliente.cuenta == cuenta):
+                         print(cliente)  # Encontramos al cliente y lo imprimimos
+                         encontro = True  # Indica que ya no necesito seguir buscando
+                         print()
+                         break  # Rompemos el ciclo for, para ya no buscar
+                          if not encontro:  # Si se recorrió la lista y no encontró nada
+                        print("El cliente {} con numero de cuenta {} no fue encontrado".format(nombre, cuenta))
+                         print ("Los datos actuales de la cuenta son: (nombre, apellidos, datetime.strptime(apertura, "%d-%m-%Y").date(),
+                                    float(salario), mail, telefono, estado, float(saldo), cuenta, sucursal, 
+                                    datetime.strptime(corte,"%d-%m-%Y").date(),)
+                        print ("Es el cliente que buscabas?")
+                           if true:
+                             print ("Estos son los datos que puedes actualizar, modifica solo los necesarios")
+                                nombre = input("Escriba el nombre del cliente: ")
+                                apellidos = input("Escriba los apellidos del cliente: ")
+                                apertura = input("Escribe la fecha de apertura (dd-mm-yyyy): ")
+                                mail = input("Escribe el correo del cliente: ")
+                                telefono = input("Escribe el telefono del cliente: ")
+                                estado = if sucursal = cdmx: 
+                                         print "Ciudad de Mexico"
+                                        elif sucursal = cancun:
+                                         print "Quintana Roo"
+                                        elif sucursal = monterrey:
+                                         print "Nuevo Leon"
+                                        elif sucursal = guadalajara:
+                                         print "Jalisco"
+                                        elif sucursal = oaxaca:
+                                         print "Oaxaca"
+                                        elif sucursal = puebla:
+                                         print "Puebla"
+                                        else:
+                                         print "No existe esa opcion\n"
+                                corte = input("Escribe la fecha de corte (dd-mm-yyyy): ")
+                                saldo = input("Escriba el saldo inicial: ")
+                                # Agregamos la persona a nuestra lista
+                                lista_nomina.append(c.Cliente(nombre, apellidos, datetime.strptime(apertura, "%d-%m-%Y").date(),
+                                                                                float(salario), mail, telefono, estado, float(saldo), cuenta, sucursal, 
+                                                                                datetime.strptime(corte,"%d-%m-%Y").date(),)
+                                print("Se actualizaron los datos!\n")
+                                except ValueError:
+                                print("La fecha no corresponde con el formato dd-mm-yyyy\n")
+                           else:
+                            print ("Intentelo de nuevo")
+                            #Que lo regrese al menu anterior
+                                                    
+    case "3":  # Registrar una nueva apertura de cuenta
+    try:
+    #Debo anadir las cuentas registradas en el dia en un solo documento, que tanga los datos de la cuenta y del empleado que la ingreso
+                      
+    case "4": #Dar de alta un empleado
+    try:
+       cuenta = #Se genera automaticamente
+       nombre = input("Escriba el nombre del empleado: ")
+       apellidos = input("Escriba los apellidos del empleado: ")
+       mail = input("Escribe el correo del empleado: ")
+       telefono = input("Escribe el telefono del empleado: ")
+       salario = input("Escribe el salario mensual del empleado: ")
+       direccion = input("Escribe la direccion del empleado: ")    
+       rfc = input("Escriba el RFC del empleado: ")                         
+       lista_empleados.append(e.Empleado(nombre, apellidos, telefono, direccion, rfc,
+                                       float(salario), mail))
+       print("Se agregó al empleado a la lista\n")
+       except ValueError:
+       print("La fecha no corresponde con el formato dd-mm-yyyy\n")
+
+    case "5": #Actualizar datos de un empleado
+    try: 
+      print ("Ingrese el nombre y los apellidos: ")
+      if not lista_empleados:  # Comprueba si la lista está vacía
+       print("La lista de Empleados está vacía!\n")
+      else:  # La lista no está vacía
+       encontro = False  # Indica que aún no la hemos encontrado
+       nombre = input("Escribe el nombre del empleado: ")
+       apellidos = input("Escribe los apellidos del empleado: ")
+      # Comenzamos la búsqueda de empleados por nombre y apellidos
+      for empleados in lista_empleados:  # Cada persona en la lista se asocia con per
+       if (empleado.nombre == nombre and
+           empleado.apellidos == apellidos):
+       print(empleado)  # Encontramos al empleado y la imprimimos
+        encontro = True  # Indica que ya no necesito seguir buscando
+       print()
+       break  # Rompemos el ciclo for, para ya no buscar
+        if not encontro:  # Si se recorrió la lista y no encontró nada
+      print("El empleado {} {} no fue encontrada".format(nombre, apellidos))
+      print ("Los datos actuales del empleado son: (e.Empleado(nombre, apellidos, telefono, direccion, rfc,
+                                                   float(salario), mail))
+      print ("Es el empleado que buscabas?")
+      if true:
+       print ("Estos son los datos que puedes actualizar, modifica solo los necesarios")
+         nombre = input("Escriba el nombre del empleado: ")
+         apellidos = input("Escriba los apellidos del empleado: ")
+         mail = input("Escribe el correo del empleado: ")
+         telefono = input("Escribe el telefono del empleado: ")
+         salario = input("Escribe el salario mensual del empleado: ")
+         direccion = input("Escribe la direccion del empleado: ")    
+         rfc = input("Escriba el RFC del empleado: ")                         
+         lista_empleados.append(e.Empleado(nombre, apellidos, telefono, direccion, rfc,
+                                float(salario), mail))
+        print("Se actualizaron los datos!\n")
+        except ValueError:
+        print("La fecha no corresponde con el formato dd-mm-yyyy\n")
+      else:
+       print ("Intentelo de nuevo")
+       #Que lo regrese al menu anterior
+                                                    
+    case "R":
+            
 
 #Armamos el menú
 REPORTEC= 'cuentas.txt'
