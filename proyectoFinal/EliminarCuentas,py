@@ -1,0 +1,192 @@
+#Programa: Proyectofinal.py
+#Objetivo: Hacer los puntos 10, 11 y 12 del proyecto final
+#Autor: Binary Balance
+#Fecha: 10/05/2024
+
+#Punto 10
+while True:
+  print("1.Eliminar una cuenta")
+  print("2.Eliminar un conjunto de cuentas")
+  print("[S]alir")
+  accion = input("Ingrese una opcion: ").upper()
+  if accion not in "1,2,S" or len(accion) != 1:
+    print("Ingrese una opcion valida")
+    continue
+  else:
+    match accion:
+
+     case "1": #Eliminar una cuenta
+       while True:
+         print("1.Eliminar cuenta por numero de cuenta")
+         print("2.Eliminar cuenta por numero de cliente")
+         accion = input("Ingrese una opcion: ").upper()
+         if accion not in "1,2" or len(accion) != 1:
+          print("Ingrese una opcion valida")
+          continue
+       else:
+          match accion:
+         
+           case "1":
+            if not lista_cuenta: #Comprueba si no hay cuentas
+              print("No hay cuentas\n")
+            else: #Si hay cuentas
+              encontro=False #Indica que aun no encontramos la cuenta
+              numero=input("Introduce el número de cuenta: ") #Pide el número de cuenta
+              for cuenta in lista_cuenta: #Recorre la lista de cuentas
+               if (cuenta.numero==numero):
+                 lista_cuenta.remove(cuenta) #Elimina la cuenta
+               encontro=True #Indica que se ha encontrado la cuenta
+               break #Termina el ciclo for
+              if not encontro: #Si no se ha encontrado la cuenta
+                 print("La cuenta {} no fue eliminada".format(numero))      
+    
+           case "2":
+            if not lista_cuenta: #Comprueba si no hay cuentas
+              print("No hay cuentas\n")
+            else: #Si hay cuentas
+              encontro=False #Indica que aun no encontramos la cuenta
+              cliente=input("Introduce el número de cliente: ") #Pide el número de cliente
+              for cuenta in lista_cuenta: #Recorre la lista de cuentas
+               if (cuenta.cliente==cliente):
+                lista_cuenta.remove(cliente) #Elimina la cuenta
+               encontro=True #Indica que se ha encontrado la cuenta
+               break #Termina el ciclo for
+              if not encontro: #Si no se ha encontrado la cuenta
+                 print("La cuenta {} no fue eliminada".format(cliente))    
+
+     case "2": #Eliminar un conjunto de cuentas
+       while True:
+         print("1.Eliminar un conjunto de cuentas por numero de cuenta")
+         print("2.Eliminar un conjunto de cuentas por numero de cliente")
+         accion = input("Ingrese una opcion: ").upper()
+         if accion not in "1,2" or len(accion) != 1:
+          print("Ingrese una opcion valida")
+          continue
+       else:
+          match accion:
+         
+           case "1":
+            if not lista_cuenta: #Comprueba si no hay cuentas
+              print("No hay cuentas\n")
+            else: #Si hay cuentas
+              encon=False #Indica que aun no encontramos las cuentas
+              numero=input("Introduce los numeros de cuenta: ") #Pide los numeros de cuenta
+              for cuentas in lista_cuenta: #Recorre la lista de cuentas
+               if (cuentas.num==numero):
+                lista_cuenta.remove(cuentas) #Elimina las cuentas
+               encontro=True #Indica que se han encontrado las cuentas
+               break #Termina el ciclo for
+              if not encontro: #Si no se han encontrado las cuentas
+                 print("Las cuentas {} no fueron eliminadas".format(numero))     
+  
+           case "2":
+            if not lista_cuenta: #Comprueba si no hay cuentas
+              print("No hay cuentas\n")
+            else: #Si hay cuentas
+              encontro=False #Indica que aun no encontramos las cuentas 
+              clientes=input("Introduce los numeros de cliente: ") #Pide los numeros de cliente
+              for cuentas in lista_cuenta: #Recorre la lista de cuentas
+               if (cuentas.clientes==clientes):
+                lista_cuenta.remove(clientes) #Elimina las cuentas
+               encontro=True #Indica que se han encontrado las cuentas
+               break #Termina el ciclo for
+              if not encontro: #Si no se han encontrado las cuentas
+                 print("Las cuentas {} no fueron eliminadas".format(clientes))
+
+     case "S": #Salir
+       print("Nos vemos!")
+       break
+
+#Punto 11
+op = 3
+cuenta = None #Aun no existe la cuenta
+while op!= "S":
+  print("1.Depositar dinero a una cuenta de debito")
+  print("2.Depositar dinero a una cuenta de nomina")
+  print("S.Salir")
+
+  op = input("Ingrese una opcion: \n").upper()
+  if op not in "1,2,S" and len(op) != 1:
+    print("Opcion invalida\n")
+  else:
+    match op:
+     case "1":
+       #Se depositara dinero a la cuenta de debito
+       if lista_cuenta is None: 
+         print("Esa cuenta no existe \n")
+       else:
+         encontro=False #Aun no se encuentra la cuenta
+         cliente=input("Ingrese el nombre del cliente: \n") 
+         for cuenta in lista_cuenta:
+          if (cuenta.cliente==cliente):
+           cantidad = float(input("Introduzca la cantidad que desea depositar:"))
+           cuenta.depositar(cantidad) 
+          encontro=True #Se encontro la cuenta
+          break #Termina el ciclo for
+         if not encontro:
+              print("No ha introducido una cantidad valida \n")
+
+     case "2":
+      #Se depositara dinero a la cuenta de nomina
+      if lista_cuenta is None: 
+        print("Esa cuenta no existe \n")
+      else:
+        encontro=False #Aun no se encuentra la cuenta
+        nomina=input("Ingrese el numero de nomina: \n")
+        for cuenta in lista_cuenta:
+          if (cuenta.nomina==nomina):
+           cantidad = float(input("Introduzca la cantidad que desea depositar:"))
+           cuenta.depositar(cantidad) 
+          encontro=True #Se encontro la cuenta
+          break #Termina el ciclo for
+        if not encontro:
+             print("No ha introducido una cantidad valida \n")
+
+     case "S":
+      #Salir
+      print("Nos vemos! \n")
+
+#Punto 12
+op = 2
+cuenta = None #Aun no esxiste la cuenta
+while op!= "S":
+  print("1.Realizar el pago de la tarjeta")
+  print("S.Salir")
+
+  op = input("Ingrese una opcion: \n").upper()
+  if op not in "1,S" and len(op) !=1:
+    print("Opcion invalida \n")
+  else:
+    match op:
+     case "1":
+       #Para realizar el pago de la tarjeta
+       def main():
+         deuda_inicial = float(input("Ingrese la deuda inicial de la tarjeta: $"))
+         cuenta = CuentaCredito(deuda_inicial)
+       while cuenta.obtener_deuda() > 0:
+         print("Su deuda es de $", cuenta.obtener_deuda())
+         pago = float(input("Ingrese el monto a pagar: $"))
+         cuenta.pago_tarjeta(pago)
+         print("La deuda restante es de $", cuenta.obtener_deuda())
+
+         print("La deuda ha sido pagada en su totalidad")
+
+       def pago_tarjeta(self,pago):
+         if pago >= self.deuda:
+           self.deuda = 0
+           print("Pago realizado")
+         else:
+           self.deuda -= pago
+           interes = self.deuda * 0.08
+           self.deuda += interes
+           print("Pago parcial realizado. Se le aplicaran intereses del 8%")
+           print("Saldo restante: $", self.deuda)
+
+       def obtener_deuda(self):
+         return self.deuda
+
+       print("El pago de la tarjeta se ha realizado en su totalidad")
+
+     case "S":
+     #Salir del programa
+       print("Nos vemos!")
