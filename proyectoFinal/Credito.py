@@ -4,17 +4,18 @@
 # Fecha: 23/05/24
 
 import Cuenta as c
-
+from datetime import date
+from datetime import datetime
 
 class Credito(c.Cuenta):
-    def __init__(self, nombre_cliente, numero_cliente, numero_tarjeta, importe, fecha_apertura,
+    def _init_(self, nombre_cliente, numero_cliente, numero_tarjeta, importe, fecha_apertura,
                  fecha_pago, sucursal, estado, correo, telefono, monto_usado, fecha_vencimiento):
         """
         Constructor de una cuenta de débito.
         :param str nombre_cliente: El nombre del cliente.
         :param str numero_cliente: El número de cliente.
         :param str numero_tarjeta: Numero de tarjeta del cliente.
-        :param float importe: Cantidad de dinero del crédito de la tarjeta.
+        :param float importe:c Cantidad de dinero del crédito de la tarjeta.
         :param str fecha_apertura: Fecha de apertura de la cuenta con formato dd-mm-yyyy.
         :param str fecha_pago: Fecha de pago de la cuenta de crédito con formato dd-mm-yyyy.
         :param int sucursal: Número de sucursal.
@@ -24,7 +25,7 @@ class Credito(c.Cuenta):
         :param float monto_usado: Monto del crédito usado.
         :param str fecha_vencimiento:
         """
-        super().__init__(nombre_cliente, numero_cliente, numero_tarjeta, importe, fecha_apertura,
+        super()._init_(nombre_cliente, numero_cliente, numero_tarjeta, importe, fecha_apertura,
                          fecha_pago, sucursal, estado, correo, telefono)
 
         self.__monto_usado = monto_usado
@@ -32,7 +33,7 @@ class Credito(c.Cuenta):
         try:
             self.__fecha_vencimiento = datetime.strptime(fecha_vencimiento, "%d-%m-%Y").date()
         except ValueError:
-            print("La fecha ingresada: '{}' no está en el formato dd-mm-yyyy\n").format(fecha_vencimiento)
+            print("La fecha ingresada: {} no está en el formato dd-mm-yyyy".format(self.__fecha_vencimiento))
 
     #GETTERS
     @property
@@ -69,23 +70,23 @@ class Credito(c.Cuenta):
         :param fecha_vencimiento: Fecha de vencimiento de la tarjeta.
         """
         try:
-            self.__fecha_vencimiento = datetime.strptime(fecha_vencimiento, "%d-%m-%Y").date()
+            self._fecha_vencimiento = datetime.strptime(self._fecha_vencimiento, "%d-%m-%Y").date()
         except ValueError:
-            print("La fecha ingresada: '{}' no está en el formato dd-mm-yyyy\n").format(fecha_vencimiento)
+            print("La fecha ingresada: {} no está en el formato dd-mm-yyyy".format(self.__fecha_vencimiento))
 
 
 
-    def __str__(self):
+    def _str_(self):
         """
         Método para imprimir una cuenta de débito en formato cadena.
         :return: Una cuenta de débito en formato cadena.
         :rtype: str
         """
-        return super().__str__().replace("producto", "tarjeta").replace("Monto", "Importe").replace("acción", "pago") + \
-            "Monto usado del crédito: {} \n Fecha de vencimiento de la tarjeta: {}\n".format(self.__monto_usado, self.__fecha_vencimiento)
+        return super()._str_().replace("CUENTA", "CUENTA CRÉDITO").replace("producto", "tarjeta").replace("Monto", "Importe").replace("acción", "pago") + \
+            "\nMonto usado del crédito: {} \nFecha de vencimiento de la tarjeta: {}\n".format(self._monto_usado, self._fecha_vencimiento.strftime("%d-%m-%Y"))
 
 
-    def __iter__(self):
+    def _iter_(self):
         """
         Método para devolver una representación iterable de una cuenta de crédito.
         :return: Representación iterable de una cuenta de crédito.
@@ -93,12 +94,12 @@ class Credito(c.Cuenta):
         """
         return iter(["Crédito", super().nombre_cliente, super().numero_cliente, super().numero_producto,
                      super().monto, super().fecha_apertura, super().fecha_accion, super().sucursal,
-                     super().estado, super().correo, super().estado], self.__monto_usado, self.__fecha_vencimiento)
+                     super().estado, super().correo, super().estado], self._monto_usado, self._fecha_vencimiento)
 
 
-if __name__ == "__main__":
+if _name_ == "_main_":
     credito = Credito("Michael Vázquez Esparza", "000003", "12345681",
-                    250000, "07-03-23", "10-03-23", 2, "Ciudad de México",
-                    "michavaz@gmail.com", "5512164325")
+                    250000, "07-03-2023", "10-03-2023", 2, "Ciudad de México",
+                    "michavaz@gmail.com", "5512164325", 80000, "15-06-2026")
 
     print(credito)
