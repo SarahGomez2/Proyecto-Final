@@ -2,42 +2,34 @@
 #Objetivo: Crear menú principal de la institucion bancaria 
 #Autor: Binary Balance
 #Fecha: 26/05/2024
-import 
-def banca():
-#Colocamos los condicionales para que el usuario interactue con el menu
-    preguntar = True
-    while preguntar:
-
-        opcion = input("Seleccione una opción:")
-        opcion = int(opcion)
-print(banca())
-#Vamos a agragar los constructores ya creados (colocar en la parte de print)
-    elif1 opcion == "1":
-        print("1) Cuentas")
-        preguntar = False
-    elif opcion == "2":
-        print("2) Ejecutivos")
-        preguntar = False
-    elif opcion == "3":
-        print("3) Generar reportes")
-        preguntar = False
-    elif opcion == "4":
-        print("4) Salir")
-        preguntar = False
-    else:
-        print("Opción invalida, volver a preguntar :))")
-        preguntar = True
-#Aquí vamos a colocar los constructores
-
-
-#Colocar el constructor para abrir los reportes
-
-        # Colocar la parte de agregar cuentas 1
+#Importamos las clases que ya tenemos 
+import AdministracionCuentas as ad
+#Creamos una lista vacia 
+admin= ad.AdministracionCuentas() 
+# Creamos el menú
 def mostrar_menu():
     print("Seleccione apartado que quiera visitar")
     print("1) Cuentas")
     print("2) Ejecutivos")
     print("3) Generar reportes")
     print("4) Cerrar")
-#mandar a llamar solo con su nombre,  las validaciones.
-print(mostrar_menu())
+    accion= input("Selecciona una opcion: ")
+    if accion not in "1234" or len(accion) !=1:
+        print("Opción invalida \n") 
+        continue 
+    match accion: 
+        case "1": 
+            while True: 
+                print("[C]argar información")
+                print("C[O]nsultar") #Necesito ayuda para hacer el menu de consultas (inciso b, primeros 2 puntos
+                while True: 
+                    print("[N]úmero de cliente")
+                    print([T]ipo de cuenta")
+                    print(No[M]bre del cliente")
+                    print(
+                    
+                
+                
+    
+
+        
