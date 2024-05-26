@@ -5,8 +5,8 @@
 
 import Cuenta as c
 
-class Nómina(c.Cuenta):
-    def __init__(self, nombre_cliente, numero_cliente, numero_cuenta, saldo, fecha_apertura,
+class Nomina(c.Cuenta):
+    def _init_(self, nombre_cliente, numero_cliente, numero_cuenta, saldo, fecha_apertura,
                  fecha_deposito, sucursal, estado, correo, telefono, rfc_empresa, nombre_empresa):
         """
         Constructor de una cuenta de débito.
@@ -23,7 +23,7 @@ class Nómina(c.Cuenta):
         :param str rfc_empresa: RFC de la empresa.
         :param str nombre_empresa: Nombre de la empresa.
         """
-        super().__init__(nombre_cliente, numero_cliente, numero_cuenta, saldo, fecha_apertura,
+        super()._init_(nombre_cliente, numero_cliente, numero_cuenta, saldo, fecha_apertura,
                          fecha_deposito, sucursal, estado, correo, telefono)
 
         self.__rfc_empresa = rfc_empresa
@@ -68,17 +68,17 @@ class Nómina(c.Cuenta):
 
 
 
-    def __str__(self):
+    def _str_(self):
         """
         Método para imprimir una cuenta de débito en formato cadena.
         :return: Una cuenta de débito en formato cadena.
         :rtype: str
         """
-        return super().__str__().replace("producto", "cuenta").replace("Monto", "Saldo").replace("acción", "depósito") + \
-            "RFC de la empresa: {} \n Nombre de la empresa: {}\n".format(self.__rfc_empresa, self.__nombre_empresa)
+        return super()._str_().replace("CUENTA", "CUENTA NÓMINA").replace("producto", "cuenta").replace("Monto", "Saldo").replace("acción", "depósito") + \
+            "RFC de la empresa: {} \nNombre de la empresa: {}\n".format(self._rfc_empresa, self._nombre_empresa)
 
 
-    def __iter__(self):
+    def _iter_(self):
         """
         Método para devolver una representación iterable de una cuenta de nómina.
         :return: Representación iterable de una cuenta de nómina.
@@ -86,12 +86,10 @@ class Nómina(c.Cuenta):
         """
         return iter(["Nómina", super().nombre_cliente, super().numero_cliente, super().numero_producto,
                      super().monto, super().fecha_apertura, super().fecha_accion, super().sucursal,
-                     super().estado, super().correo, super().estado], self.__rfc_empresa, self.__nombre_empresa)
+                     super().estado, super().correo, super().estado], self._rfc_empresa, self._nombre_empresa)
 
 
-if __name__ == "__main__":
-    nomina = Nomina("Vittorino Bianco ", "000004", "12345694",
-                    250000, "07-03-23", "10-03-23", 2, "Ciudad de México",
-                    "vittorinocic@gmail.com", "5585471216")
-
-    print(nomina)
+if _name_ == "_main_":
+    nomina = Nomina("Vittorino Bianco", "000004", "12345694",
+                    250000, "07-03-2023", "10-03-2023", 2, "Ciudad de México",
+                    "vittorinocic@gmail.com", "5585471216", "DXIA050307ME1", "Desolé")
