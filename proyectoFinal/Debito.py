@@ -6,7 +6,7 @@
 import Cuenta as c
 
 class Debito(c.Cuenta):
-    def __init__(self, nombre_cliente, numero_cliente, numero_cuenta, saldo, fecha_apertura,
+    def _init_(self, nombre_cliente, numero_cliente, numero_cuenta, saldo, fecha_apertura,
                  fecha_corte, sucursal, estado, correo, telefono):
         """
         Constructor de una cuenta de débito.
@@ -21,18 +21,18 @@ class Debito(c.Cuenta):
         :param str correo: Dirección de correo electrónico del cliente.
         :param str telefono: Número de teléfono del cliente.
         """
-        super().__init__(nombre_cliente, numero_cliente, numero_cuenta, saldo, fecha_apertura,
+        super()._init_(nombre_cliente, numero_cliente, numero_cuenta, saldo, fecha_apertura,
                  fecha_corte, sucursal, estado, correo, telefono)
 
-    def __str__(self):
+    def _str_(self):
         """
         Método para imprimir una cuenta de débito en formato cadena.
         :return: Una cuenta de débito en formato cadena.
         :rtype: str
         """
-        return super().__str__().replace("producto", "cuenta").replace("Monto", "Saldo").replace("acción", "corte"),
+        return super()._str_().replace("CUENTA", "CUENTA DÉBITO").replace("producto", "cuenta").replace("Monto", "Saldo").replace("acción", "corte")
 
-    def __iter__(self):
+    def _iter_(self):
         """
         Método para devolver una representación iterable de una cuenta de débito.
         :return: Representación iterable de una cuenta de débito.
@@ -43,9 +43,9 @@ class Debito(c.Cuenta):
                      super().estado, super().correo, super().estado])
 
 
-if __name__ == "__main__":
+if _name_ == "_main_":
     debito = Debito("Louisa Martínez López", "000002", "1234",
-                    60000, "23-02-23", "27-03-23", 2, "Ciudad de México",
+                    60000, "23-02-2023", "27-03-2023", 2, "Ciudad de México",
                     "loumarp@gmail.com", "5587926947")
 
     print(debito)
